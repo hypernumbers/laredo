@@ -1,0 +1,37 @@
+%%% @author        Gordon Guthrie
+%%% @copyright (C) 2013, Gordon Guthrie
+%%% @doc           core record definitions for laredo
+%%%
+%%% @end
+%%% Created : 28 Jul 2013 by gordon@vixo.com
+
+-type content_type() :: html | markdown.
+-type javascript()   :: list().
+-type css()          :: list().
+-type jsfiles()      :: [javascript()].
+-type cssfiles()     :: [css()].
+
+-type panel()        :: #panel().
+
+-record(panel,
+        {
+          content_type         :: content_type() = html,
+          content                                = [],
+          javascript_head      :: jsfiles()      = [],
+          javascript_foot      :: jsfiles()      = [],
+          css                  :: cssfiles()     = [],
+          javascript_reload    :: javascript()   = [],
+          javascript_remoting                    = []
+         }).
+
+-record(webpage,
+        {
+          title,
+          meta,
+          viewport,
+          header     :: panel(),
+          navigation :: panel(),
+          mainbody   :: panel(),
+          sidebar    :: panel(),
+          footer     :: panel()
+        }).
