@@ -1,3 +1,8 @@
+Status
+======
+
+This is not even alpha software.
+
 Laredo
 ======
 
@@ -31,7 +36,7 @@ When you are knocking up web apps you are mostly concerned with rendering the bo
 
 With Laredo you simply build the panels you care about in the web handlers and the templating system fills in the ones you haven't with the site defaults.
 
-Laredo provides a module laredo_defaults.erl which is used to provide this.
+The defaults are provided by a behaviour called laredo. The default laredo behaviour is in the module laredo.erl - but you can implement your own laredo behaviour in another module (see examples/ for examples) and then change the value of the template record to change the template
 
 For Your Listening Pleasure
 ---------------------------

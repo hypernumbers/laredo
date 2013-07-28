@@ -10,7 +10,7 @@
 -type css()          :: list().
 -type jsfiles()      :: [javascript()].
 -type cssfiles()     :: [css()].
-
+-type module_name()  :: atom(). %% the name of a module that implements the laredo behaviour
 
 -type panels()       :: header | navigation | mainbody | search | sidebar1 | sidebar2 | sidebar3 | advers1 | adverts2 | adverts3 | footer | none.
 
@@ -46,12 +46,14 @@
 
 -record(webpage,
         {
-          title,
-          meta,
-          viewport,
-          javascript_head = []         :: jsfiles(),
-          javascript_foot = []         :: jsfiles(),
-          css             = []         :: cssfiles(),
+          title           = default,
+          template        = laredo     :: module_name(),
+          language        = "en",
+          meta            = default,
+          viewport        = default,
+          javascript_head = default    :: jsfiles(),
+          javascript_foot = default    :: jsfiles(),
+          css             = default    :: cssfiles(),
           webbody         = #webbody{} :: webbody()
         }).
 

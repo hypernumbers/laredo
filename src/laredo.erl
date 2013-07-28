@@ -9,6 +9,9 @@
 
 -include("laredo.hrl").
 
+-define(NOJAVASCRIPT, []).
+-define(NOCSS,        []).
+
 %% export the behaviour
 -export([
          behaviour_info/1
@@ -22,6 +25,7 @@
 %% exports for making the page defaults
 -export([
          title/0,
+         language/0,
          meta/0,
          viewport/0,
          javascript_head/0,
@@ -58,6 +62,7 @@ behaviour_info(callbacks) ->
     [
      {get_page,        0},
      {title,           0},
+     {language,        0},
      {meta,            0},
      {viewport,        0},
      {javascript_head, 0},
@@ -97,15 +102,17 @@ get_page() ->
 %%%-----------------------------------------------------------------------------
 title() -> "<title>Laredo</title>".
 
+language() -> "en".
+
 meta() -> none.
 
 viewport() -> none.
 
-javascript_head() -> none.
+javascript_head() -> ?NOJAVASCRIPT.
 
-javascript_foot() -> none.
+javascript_foot() -> ?NOJAVASCRIPT.
 
-css() -> none.
+css() -> ?NOCSS.
 %%%-----------------------------------------------------------------------------
 %%%
 %%% Panel defaults

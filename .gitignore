@@ -1,5 +1,55 @@
-.eunit
-deps
-*.o
+n*#*#
+*.#*
 *.beam
-*.plt
+*.dump
+*.terms
+*~
+.DS_Store
+TAGS
+tags
+var
+ebin/
+ebin/*.beam
+ebin/*.erl
+shell
+migrate_*
+lib/*/ebin/*.erl
+lib/hypernumbers*/src/ms_util2.erl
+lib/starling/ebin/starling_drv
+priv/load_testing/logs
+priv/verification/dets
+lib/hypernumbers*/priv/core_install/docroot/spreadsheet.*.css
+lib/hypernumbers*/priv/core_install/docroot/spreadsheet.*.js
+lib/hypernumbers*/priv/core_install/docroot/webandwiki.*.css
+lib/hypernumbers*/priv/core_install/docroot/webandwiki.*.js
+
+lib/twilio/ebin/twilio.app
+
+## Script used for fetching svn externals
+lib/git-svn-*
+
+## Variable Config
+conf/sys.config
+
+## Dialyzer output
+priv/dialyzer/output.dialyzer.*
+
+## Tarsnap checks
+priv/tarsnap/output.txt
+
+## Documentation
+lib/formula_engine*/doc/*.html
+lib/hypernumbers*/doc/*.html
+lib/read_excel*/doc/*.html
+
+## Generated lexers/parsers
+lib/gettext/priv/
+lib/formula_engine*/src/*_lexer.erl
+lib/formula_engine*/src/*_parser.erl
+lib/formula_engine*/src/superlex.erl
+
+## Generated Test Files
+tests/excel_import_*
+tests/system_test/*_SUITE.erl
+tests/cover.data
+tests/funs_fuzz_test/*

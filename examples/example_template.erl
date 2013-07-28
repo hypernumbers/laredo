@@ -10,6 +10,9 @@
 
 -include("laredo.hrl").
 
+-define(NOJAVASCRIPT, []).
+-define(NOCSS,        []).
+
 %% export for getting the default page structure
 -export([
          get_page/0
@@ -18,6 +21,7 @@
 %% exports for making the page defaults
 -export([
          title/0,
+         language/0,
          meta/0,
          viewport/0,
          javascript_head/0,
@@ -54,15 +58,17 @@ get_page() ->
 %%%-----------------------------------------------------------------------------
 title() -> "<title>Laredo</title>".
 
+language() -> "de".
+
 meta() -> none.
 
 viewport() -> none.
 
-javascript_head() -> none.
+javascript_head() -> ?NOJAVASCRIPT.
 
-javascript_foot() -> none.
+javascript_foot() -> ?NOJAVASCRIPT.
 
-css() -> none.
+css() -> ?NOCSS.
 %%%-----------------------------------------------------------------------------
 %%%
 %%% Panel defaults
