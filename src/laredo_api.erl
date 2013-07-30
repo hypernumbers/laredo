@@ -63,7 +63,7 @@ render2(#webpage{title           = Title,
     JSRem2    = make_remoting(JSRemoting),
     Body2     = make_body(Body, JF3, JSReload2, JSRem2),
 
-    _HTML = make_html(Head, Lang2, Body2).
+    _HTML = list_to_binary(make_html(Head, Lang2, Body2)).
 
 render_body([], _WebBody, Acc) ->
     lists:flatten(lists:reverse(Acc));
