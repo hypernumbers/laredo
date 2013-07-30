@@ -1,11 +1,11 @@
 %%% @author        Gordon Guthrie
 %%% @copyright (C) 2013, Gordon Guthrie
-%%% @doc           an example laredo template
+%%% @doc           a unit test for the laredo behaviour/api
 %%%
 %%% @end
 %%% Created : 28 Jul 2013 by gordon@vixo.com
 
--module(example_template).
+-module(laredo_behaviour_test).
 -behaviour(laredo).
 
 -include("laredo.hrl").
@@ -62,7 +62,6 @@ language() -> "de".
 
 meta() ->
     "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />".
-
 
 viewport() -> none.
 

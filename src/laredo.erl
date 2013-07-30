@@ -104,7 +104,8 @@ title() -> "<title>Laredo</title>".
 
 language() -> "en".
 
-meta() -> none.
+meta() ->
+    "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />".
 
 viewport() -> none.
 
