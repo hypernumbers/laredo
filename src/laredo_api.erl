@@ -226,12 +226,32 @@ consolidate(#webbody{
 
     JSRemoting = [{P, X} || {P, #webpanel{javascript_remoting = X}} <- Panels],
 
-    JH3  = dedup_preserve_order(JH2, []),
-    JF3  = dedup_preserve_order(JF2, []),
+    JH3  = dedup_preserve_order(preserve_flatten(JH2), []),
+    JF3  = dedup_preserve_order(preserve_flatten(JF2), []),
     JF4  = remove_head_js_from_foot(JH3, JF3),
-    CSS3 = dedup_preserve_order(CSS2, []),
+    CSS3 = dedup_preserve_order(preserve_flatten(CSS2), []),
 
-    {JH3, JF4, CSS3, JSReload, JSRemoting}.
+    JSReload2  = preserve_flatten(JSReload),
+    {JH3, JF4, CSS3, JSReload2, JSRemoting}.
+
+preserve_flatten(List) ->
+    preserve_flatten2(List, []).
+
+preserve_flatten2([], Acc) ->
+    lists:reverse(Acc);
+preserve_flatten2([H | T], Acc) ->
+    NewAcc = preserve_2(H, Acc),
+    preserve_flatten2(T, NewAcc).
+
+%% don't reverse
+preserve_2(List, Acc) ->
+    preserve_3(lists:reverse(List), Acc).
+
+%% don't reverse list
+preserve_3([], Acc) ->
+    Acc;
+preserve_3([H | T], Acc) ->
+    preserve_3(T, [H | Acc]).
 
 remove_head_js_from_foot([], List) ->
     List;
