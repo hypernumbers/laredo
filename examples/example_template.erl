@@ -23,7 +23,6 @@
          title/0,
          language/0,
          meta/0,
-         viewport/0,
          javascript_head/0,
          javascript_foot/0,
          css/0
@@ -62,9 +61,6 @@ language() -> "de".
 
 meta() ->
     "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />".
-
-
-viewport() -> none.
 
 javascript_head() -> ?NOJAVASCRIPT.
 
