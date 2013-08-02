@@ -38,7 +38,6 @@ render2(#webpage{title           = Title,
                  template        = Tmpl,
                  language        = Lang,
                  meta            = Meta,
-                 viewport        = VP,
                  javascript_head = JH,
                  javascript_foot = JF,
                  css             = CSS,
@@ -51,13 +50,12 @@ render2(#webpage{title           = Title,
     Title2    = set_defaults(Tmpl, title, Title),
     Lang2     = set_defaults(Tmpl, langauge, Lang),
     Meta2     = set_defaults(Tmpl, meta, Meta),
-    Viewport2 = set_defaults(Tmpl, viewport, VP),
 
     JH3  = make_js(JH2),
     CSS3 = make_css(CSS2),
-    Head = make_head(Title2, Meta2, Viewport2, JH3, CSS3),
+    Head = make_head(Title2, Meta2, JH3, CSS3),
 
-    Body      = render_body(Page, WebBody, []),
+    Body      = render_body(Page, WebBody),
     JF3       = make_js(JF2),
     JSReload2 = make_reload(JSReload),
     JSRem2    = make_remoting(JSRemoting),
@@ -65,36 +63,67 @@ render2(#webpage{title           = Title,
 
     _HTML = list_to_binary(make_html(Head, Lang2, Body2)).
 
-render_body([], _WebBody, Acc) ->
+
+render_body(Page, WebBody) when is_record(WebBody, webbody) ->
+    lists:flatten(render_b2(Page, WebBody, [])).
+
+render_b2([], _WebBody, Acc) ->
     lists:flatten(lists:reverse(Acc));
-render_body([#pagediv{id = ID, class = Class, contents = C} | T], Body, Acc)
-  when is_record(C, pagediv) orelse
-       is_record(C, pagespan) ->
-    NewAcc = make_div(ID, Class, render_body(C, Body, [])),
-    render_body(T, Body, [NewAcc | Acc]);
-render_body([#pagespan{id = ID, class = Class, contents = C} | T], Body, Acc)
-  when is_record(C, pagediv) orelse
-       is_record(C, pagespan) ->
-    NewAcc = make_span(ID, Class, render_body(C, Body, [])),
-    render_body(T, Body, [NewAcc | Acc]);
-render_body([#pagediv{id = ID, class = Class, contents = C} | T], Body, Acc) ->
-    NewAcc = make_div(ID, Class, get_panel(C, Body)),
-    render_body(T, Body, [NewAcc | Acc]);
-render_body([#pagespan{id = ID, class = Class, contents = C} | T], Body, Acc) ->
-    NewAcc = make_span(ID, Class, get_panel(C, Body)),
-    render_body(T, Body, [NewAcc | Acc]).
+render_b2([#dv{contents = C} = H | T], Body, Acc)
+  when is_record(C, dv) orelse
+       is_record(C, span) ->
+    NewAcc = make_dv(H#dv{contents = render_b2(C, Body, [])}),
+    render_b2(T, Body, [{seg, NewAcc} | Acc]);
+render_b2([#span{contents = C} = H | T], Body, Acc)
+  when is_record(C, dv) orelse
+       is_record(C, span) ->
+    NewAcc = make_span(H#span{contents = render_b2(C, Body, [])}),
+    render_b2(T, Body, [NewAcc | Acc]);
+render_b2([#dv{contents = L} = H | T], Body, Acc) when is_list(L) ->
+    NewAcc = make_dv(H#dv{contents = render_b2(L, Body, [])}),
+    render_b2(T, Body, [NewAcc | Acc]);
+render_b2([#span{contents = L} = H | T], Body, Acc)
+  when is_list(L) ->
+    NewAcc = make_span(H#span{contents = render_b2(L, Body, [])}),
+    render_b2(T, Body, [NewAcc | Acc]);
+render_b2([#dv{contents = A} = H | T], Body, Acc) when is_atom(A) ->
+    NewAcc = make_dv(H#dv{contents = get_panel(A, Body)}),
+    render_b2(T, Body, [NewAcc | Acc]);
+render_b2([#span{contents = A} = H | T], Body, Acc) when is_atom(A) ->
+    NewAcc = make_span(H#span{contents = get_panel(A, Body)}),
+    render_b2(T, Body, [NewAcc | Acc]).
 
-make_span(none, none,  C) -> "<span>" ++ C ++ "</span>";
-make_span(ID,   none,  C) -> "<span id='" ++ ID ++ "'>" ++ C ++ "</span>";
-make_span(none, Class, C) -> "<span class='" ++ Class ++ "'>" ++ C ++ "</span>";
-make_span(ID,   Class, C) -> "<span id-'" ++ ID ++ "' class='" ++
-                               Class ++ "'>" ++ C ++ "</span>".
+make_span(#span{id      = Id,
+                class   = Class,
+                role    = Role,
+                contents = C}) -> make_("span", Id, Class, Role, C).
 
-make_div(none, none,  C) -> "<div>" ++ C ++ "</div>";
-make_div(ID,   none,  C) -> "<div id='" ++ ID ++ "'>" ++ C ++ "</div>";
-make_div(none, Class, C) -> "<div class='" ++ Class ++ "'>" ++ C ++ "</div>";
-make_div(ID,   Class, C) -> "<div id-'" ++ ID ++ "' class='" ++
-                                Class ++ "'>" ++ C ++ "</div>".
+make_dv(#dv{id      = Id,
+            class   = Class,
+            role    = Role,
+            contents = C}) -> make_("div", Id, Class, Role, C).
+
+make_(Tag, Id, Class, Role, Content) ->
+    Inner = remove_empties([
+                            make_2("id", Id),
+                            make_2("class", Class),
+                            make_2("role", Role)
+                           ], []),
+    case string:join(Inner, " ") of
+        []   ->  "<" ++ Tag ++
+                   ">" ++ Content ++ "</" ++ Tag ++ ">";
+        List -> "<" ++ Tag ++ " " ++
+                    List ++
+                    ">" ++ Content ++ "</" ++ Tag ++ ">"
+    end.
+
+remove_empties([],       Acc) -> lists:reverse(Acc);
+remove_empties([[] | T], Acc) -> remove_empties(T, Acc);
+remove_empties([H  | T], Acc) -> remove_empties(T, [H | Acc]).
+
+make_2(_, [])                         -> [];
+make_2(K, V) when is_list(K) andalso
+                  is_list(V)          -> K ++ "='" ++ V ++ "'".
 
 get_panel(header,     #webbody{header     = R}) -> render_panel(R);
 get_panel(navigation, #webbody{navigation = R}) -> render_panel(R);
@@ -111,12 +140,11 @@ get_panel(footer,     #webbody{footer     = R}) -> render_panel(R).
 render_panel(#webpanel{content_type = Type, content = C}) ->
     laredo_api:Type(C).
 
-make_head(Title, Meta, Viewport, JH2, CSS2) ->
+make_head(Title, Meta, JH2, CSS2) ->
     List = [
             "<head>",
             Meta,
             Title,
-            Viewport,
             JH2,
             CSS2,
             "</head>"
@@ -130,6 +158,8 @@ make_j2([H | T], Acc) -> NewAcc = "<script src='" ++ H ++ "'></script>",
                          make_j2(T, [NewAcc | Acc]).
 
 make_css(List) -> make_c2(List, []).
+
+
 
 make_c2([],      Acc) -> string:join(lists:reverse(Acc), "\n");
 make_c2([H | T], Acc) -> NewA = "<link rel='stylesheet' href='" ++ H ++ "' />",
@@ -282,7 +312,6 @@ add_defaults(#webpage{
                 title           = Title,
                 template        = Tmpl,
                 meta            = Meta,
-                viewport        = Viewport,
                 javascript_head = JSHead,
                 javascript_foot = JSFoot,
                 css             = CSS,
@@ -291,7 +320,6 @@ add_defaults(#webpage{
     WP#webpage{
       title            = set_defaults(Tmpl, title,           Title),
       meta             = set_defaults(Tmpl, meta,            Meta),
-      viewport         = set_defaults(Tmpl, viewport,        Viewport),
       javascript_head  = set_defaults(Tmpl, javascript_head, JSHead),
       javascript_foot  = set_defaults(Tmpl, javascript_foot, JSFoot),
       css              = set_defaults(Tmpl, css,             CSS),

@@ -50,7 +50,6 @@
           template        = laredo     :: module_name(),
           language        = "en",
           meta            = default,
-          viewport        = default,
           javascript_head = default    :: jsfiles(),
           javascript_foot = default    :: jsfiles(),
           css             = default    :: cssfiles(),
@@ -58,17 +57,19 @@
         }).
 
 
--record(pagespan,
+-record(span,
         {
-          id       = none :: list() | none,
-          class    = none :: list() | none,
-          contents = []   :: list()
+          id       = [] :: list(),
+          class    = [] :: list(),
+          role     = [] :: list(),
+          contents = [] :: list()
         }).
 
 %% can't be called div 'cos that is a reserved atom in Erlang
--record(pagediv,
+-record(dv,
         {
-          id       = none :: list() | none,
-          class    = none :: list() | none,
-          contents = []   :: panels()
+          id       = [] :: list(),
+          class    = [] :: list(),
+          role     = [] :: list(),
+          contents = [] :: panels()
         }).

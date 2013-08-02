@@ -27,7 +27,6 @@
          title/0,
          language/0,
          meta/0,
-         viewport/0,
          javascript_head/0,
          javascript_foot/0,
          css/0
@@ -64,7 +63,6 @@ behaviour_info(callbacks) ->
      {title,           0},
      {language,        0},
      {meta,            0},
-     {viewport,        0},
      {javascript_head, 0},
      {javascript_foot, 0},
      {css,             0},
@@ -90,9 +88,9 @@ behaviour_info(_Other) ->
 %%%-----------------------------------------------------------------------------
 get_page() ->
     [
-     #pagediv{contents = header},
-     #pagediv{contents = mainbody},
-     #pagediv{contents = footer}
+     #dv{contents = header},
+     #dv{contents = mainbody},
+     #dv{contents = footer}
     ].
 
 %%%-----------------------------------------------------------------------------
@@ -106,8 +104,6 @@ language() -> "en".
 
 meta() ->
     "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />".
-
-viewport() -> none.
 
 javascript_head() -> ?NOJAVASCRIPT.
 
