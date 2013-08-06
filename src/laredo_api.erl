@@ -169,7 +169,7 @@ make_reload(List) ->
     List2 = [X ++ "();" || X <- List],
     List3 = [
              "<script>",
-             "LAREDO.reload = function () {",
+             "window.LAREDO.reload = function () {",
              string:join(List2, "\n"),
              "};"
              "</script>"
@@ -180,9 +180,10 @@ make_remoting(List) ->
     List2 = make_r2(List, []),
     List3 = [
              "<script>",
-             "LAREDO.handle_remoting = function (Msg) {",
+             "window.LAREDO.handle_remoting = function (Msg) {",
              "switch (Msg.panel) {",
              List2,
+             "};",
              "};",
              "</script>"
             ],
@@ -207,7 +208,6 @@ make_body(Body, JF, JSReload, JSRemoting) ->
             JF,
             JSReload,
             JSRemoting,
-            get_laredo_js(),
             "</body>"
            ],
     string:join(List, "\n").
@@ -268,7 +268,7 @@ preserve_flatten(List) ->
     preserve_flatten2(List, []).
 
 preserve_flatten2([], Acc) ->
-    lists:reverse(Acc);
+    Acc;
 preserve_flatten2([H | T], Acc) ->
     NewAcc = preserve_2(H, Acc),
     preserve_flatten2(T, NewAcc).
@@ -362,15 +362,6 @@ testing() ->
     Got = render_page(WP),
     io:format("Got is ~p~n", [Got]),
     ok.
-
-%% include in the javascript
-get_laredo_js() ->
-    List = [
-            "<script>",
-            "LAREDO = {};"
-            "</script>"
-           ],
-    string:join(List, "\n").
 
 %%%-----------------------------------------------------------------------------
 %%%
