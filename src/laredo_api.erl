@@ -125,20 +125,21 @@ make_2(_, [])                         -> [];
 make_2(K, V) when is_list(K) andalso
                   is_list(V)          -> K ++ "='" ++ V ++ "'".
 
-get_panel(header,     #webbody{header     = R}) -> render_panel(R);
-get_panel(navigation, #webbody{navigation = R}) -> render_panel(R);
-get_panel(mainbody,   #webbody{mainbody   = R}) -> render_panel(R);
-get_panel(search,     #webbody{search     = R}) -> render_panel(R);
-get_panel(sidebar1,   #webbody{sidebar1   = R}) -> render_panel(R);
-get_panel(sidebar2,   #webbody{sidebar2   = R}) -> render_panel(R);
-get_panel(sidebar3,   #webbody{sidebar3   = R}) -> render_panel(R);
-get_panel(adverts1,   #webbody{adverts1   = R}) -> render_panel(R);
-get_panel(adverts2,   #webbody{adverts2   = R}) -> render_panel(R);
-get_panel(adverts3,   #webbody{adverts3   = R}) -> render_panel(R);
-get_panel(footer,     #webbody{footer     = R}) -> render_panel(R).
+get_panel(header,     #webbody{header     = R}) -> render_panel(header, R);
+get_panel(navigation, #webbody{navigation = R}) -> render_panel(navigation, R);
+get_panel(mainbody,   #webbody{mainbody   = R}) -> render_panel(mainbody, R);
+get_panel(search,     #webbody{search     = R}) -> render_panel(search, R);
+get_panel(sidebar1,   #webbody{sidebar1   = R}) -> render_panel(sidebar1, R);
+get_panel(sidebar2,   #webbody{sidebar2   = R}) -> render_panel(sidebar2, R);
+get_panel(sidebar3,   #webbody{sidebar3   = R}) -> render_panel(sidebar3, R);
+get_panel(adverts1,   #webbody{adverts1   = R}) -> render_panel(adverts1, R);
+get_panel(adverts2,   #webbody{adverts2   = R}) -> render_panel(adverts2, R);
+get_panel(adverts3,   #webbody{adverts3   = R}) -> render_panel(adverts3, R);
+get_panel(footer,     #webbody{footer     = R}) -> render_panel(footer, R).
 
-render_panel(#webpanel{content_type = Type, content = C}) ->
-    laredo_api:Type(C).
+render_panel(Panel, #webpanel{content_type = Type, content = C}) ->
+    Rendered = laredo_api:Type(C),
+    html:span(Renders, [], "laredo-wrap-" ++ atom_to_list(Panel)).
 
 make_head(Title, Meta, JH2, CSS2) ->
     List = [
