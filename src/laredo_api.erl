@@ -139,7 +139,7 @@ get_panel(footer,     #webbody{footer     = R}) -> render_panel(footer, R).
 
 render_panel(Panel, #webpanel{content_type = Type, content = C}) ->
     Rendered = laredo_api:Type(C),
-    html:span(Renders, [], "laredo-wrap-" ++ atom_to_list(Panel)).
+    html:span(Rendered, [], "laredo-wrap-" ++ atom_to_list(Panel)).
 
 make_head(Title, Meta, JH2, CSS2) ->
     List = [
